@@ -1,0 +1,30 @@
+#!/usr/bin/bash
+shopt -s checkwinsize && (:;:) && declare -g COLUMNS LINES
+get_size() {
+    local S
+    _1() { printf '%s %s\n' "${COLUMNS}" "${LINES}" ; }
+    _2() { read LINES COLUMNS < <(stty size ) ; (:;:) && printf '%s %s\n' "${COLUMNS}" "${LINES}" ; }
+    _3() { printf '%b' "${TMUX:+\\ePtmux;\\e}\\e[14t${TMUX:+\\e\\\\}" ; IFS=';t' read -d t -t 0.05 -sra term_size ; printf '%i %i\n' "$(( ${term_size[2]} / 16 ))" "$(( ${term_size[1]} / 8 ))" ; }
+    for((n=1;n<4;n++)){ [[ ${S:="$(_$n)"} != +([0-9])+(\ )+([0-9]) ]] || break; }
+    printf '%i %i\n' "${S%\ *}" "${S#*\ }" | cut -d\  -f${1:-1,2}
+}
+respoi() { local {x,X,w,W}=1 {y,Y,h,H}=2 ; : "${!#::1}" ; echo "${!_}" ; }
+(($# == 0)) && get_size || { for((a=1;a<=$#;a++)){ [[ "${!a,,}" != *(\-)[hwxy]* ]] || get_size $(respoi "${!a//[!wWxXhHyY]/}"); }; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
